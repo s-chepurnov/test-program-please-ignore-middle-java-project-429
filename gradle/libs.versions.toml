@@ -1,0 +1,30 @@
+[plugins]
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow-plugin" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless-plugin" }
+versions = { id = "io.github.ben-manes.versions", version.ref = "versions-plugin" }
+version-catalog-update = { id = "nl.littlerobots.version-catalog-update", version.ref = "catalog-update-plugin" }
+
+[versions]
+shadow-plugin = "9.6.1"
+spotless-plugin = "8.10.0"
+versions-plugin = "0.61.0"
+catalog-update-plugin = "1.1.1"
+javalin = "7.2.3"
+jackson = "2.22.2"
+hikari = "7.1.0"
+postgresql = "42.7.13"
+slf4j = "2.0.18"
+junit-bom = "6.1.3"
+assertj = "3.27.7"
+
+[libraries]
+javalin = { module = "io.javalin:javalin", version.ref = "javalin" }
+javalinTesttools = { module = "io.javalin:javalin-testtools", version.ref = "javalin" }
+jacksonDatabind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
+hikariCp = { module = "com.zaxxer:HikariCP", version.ref = "hikari" }
+postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
+slf4jSimple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
+junitBom = { module = "org.junit:junit-bom", version.ref = "junit-bom" }
+junitJupiter = { module = "org.junit.jupiter:junit-jupiter" }
+junitPlatformLauncher = { module = "org.junit.platform:junit-platform-launcher" }
+assertjCore = { module = "org.assertj:assertj-core", version.ref = "assertj" }
