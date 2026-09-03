@@ -2,7 +2,6 @@ package io.hexlet.flightbooking;
 
 import io.javalin.http.HttpStatus;
 
-/** Ошибка, которую маршрут отдаёт осознанно: статус плюс код и текст по контракту. */
 public class ApiException extends RuntimeException {
 
     private final HttpStatus status;

@@ -8,17 +8,6 @@ import java.sql.SQLException;
 import java.util.Objects;
 import javax.sql.DataSource;
 
-/**
- * Источник соединений с PostgreSQL.
- *
- * <p>Главное здесь — разбор {@code DATABASE_URL}. Переменная приходит в форме {@code
- * postgres://user:password@host:5432/appdb}: так её задаёт и проверка, и Render. Драйверу JDBC
- * нужен другой адрес — {@code jdbc:postgresql://host:5432/appdb}, а логин с паролем отдельными
- * параметрами. Конвертация делается здесь, один раз, и работает одинаково локально и на хостинге.
- *
- * <p>Пояс сессии выставляется параметром соединения {@code -c timezone=UTC}, а не запросом после
- * подключения: контракт требует времени в UTC, а пояс сервера базы может быть любым.
- */
 public final class Database {
 
     private static final int CONNECT_ATTEMPTS = 30;
@@ -27,7 +16,6 @@ public final class Database {
 
     private Database() {}
 
-    /** Настройки источника данных, собранные из адреса в форме postgres://. */
     public record Settings(String jdbcUrl, String username, String password) {}
 
     public static Settings parse(String databaseUrl) {
@@ -87,7 +75,6 @@ public final class Database {
         return new HikariDataSource(config);
     }
 
-    /** Ждёт базу: в compose приложение стартует раньше, чем postgres примет соединения. */
     public static Connection connectWithRetries(DataSource dataSource) throws SQLException {
         SQLException lastError = null;
 

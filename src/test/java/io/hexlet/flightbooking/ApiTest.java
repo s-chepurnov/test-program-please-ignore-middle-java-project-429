@@ -16,16 +16,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
-/**
- * Тесты бьют по API через приложение целиком: маршрутизация, валидация, база и сериализация JSON.
- * Именно в сериализации живут ошибки контракта — тесты на уровне классов их не видят.
- *
- * <p>{@code JavalinTest} поднимает приложение на свободном порту сам и сам его гасит, поэтому
- * отдельного {@code make start} тестам не нужно.
- *
- * <p>База нужна настоящая: без {@code DATABASE_URL} тесты пропускаются, а не подменяют её моком —
- * подмена скрыла бы ровно те ошибки, которые здесь ищутся.
- */
 @EnabledIfEnvironmentVariable(named = "DATABASE_URL", matches = ".+")
 class ApiTest {
 
@@ -299,8 +289,6 @@ class ApiTest {
 
     @Test
     void датаРожденияНеУезжаетНаСутки() {
-        // LocalDate без JavaTimeModule Jackson пишет массивом [1990,5,20], java.sql.Date — числом.
-        // Строка из to_char в SQL защищает от обоих случаев.
         JavalinTest.test(
                 app(),
                 (server, client) -> {
@@ -429,9 +417,6 @@ class ApiTest {
 
     @Test
     void прямаяСсылкаНаЭкранОтдаётСтраницу() {
-        // Тот же обработчик, что даёт JSON-404 внутри /api, вне /api обязан отдавать страницу.
-        // Пока статика не собрана (make build), файла нет — тест проверяет главное: ответ приходит
-        // не от API-роутера и не в формате ошибки контракта.
         JavalinTest.test(
                 app(),
                 (server, client) -> {

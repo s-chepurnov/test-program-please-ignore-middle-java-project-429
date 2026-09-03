@@ -6,13 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Проверяем наличие и непустоту обязательных полей, а не форматы.
- *
- * <p>Это осознанное решение: клиент присылает, например, номер документа «1» — такое значение
- * валидное. Регулярное выражение на серию и номер паспорта, на телефон или строгая проверка email
- * ломают рабочий сценарий и делают API непригодным для фронтенда.
- */
 public final class Validator {
 
     private Validator() {}
@@ -124,10 +117,6 @@ public final class Validator {
                 text(item.get("documentNumber")).trim());
     }
 
-    /**
-     * Дата в формате контракта. {@code LocalDate.parse} принимает только ISO-форму, поэтому
-     * «03.08.2026» отсекается здесь, а не в базе.
-     */
     private static String parseDate(String value) {
         if (blank(value)) {
             return null;

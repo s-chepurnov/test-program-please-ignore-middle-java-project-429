@@ -15,15 +15,7 @@ import javax.sql.DataSource;
 /**
  * Приложение: маршруты API плюс раздача фронтенда с SPA-fallback.
  *
- * <p>Фреймворк здесь — деталь эталона, а не задания: студент выбирает свой. Контракт запуска
- * (переменные {@code PORT} и {@code DATABASE_URL}, цели Makefile) и контракт API от выбора не
- * зависят.
- *
- * <p>SPA-fallback живёт в обработчике «страница не найдена», а не в catch-all маршруте: у Javalin
- * статика подключается до маршрутизации, а обработчик 404 срабатывает уже после того, как ни
- * статика, ни маршруты ничего не нашли. Там же развилка — путь внутри {@code /api} отдаёт JSON-404,
- * остальное отдаёт {@code index.html}.
- */
+**/
 public final class App {
 
     private static final int DEFAULT_PORT = 8080;
@@ -34,9 +26,6 @@ public final class App {
     public static void main(String[] args) {
         var dataSource = Database.dataSource();
         var app = create(dataSource);
-
-        // Порт читает приложение, а не обёртка: контракт запуска требует переменную PORT, и хостинг
-        // задаёт именно её.
         app.start("0.0.0.0", port());
     }
 
@@ -161,9 +150,6 @@ public final class App {
                             config.routes.exception(
                                     Exception.class,
                                     (failure, context) -> {
-                                        // Деталей клиенту не отдаём, но в лог они попадают: без
-                                        // этого причина 500 не
-                                        // видна ни в docker logs, ни в логе CI.
                                         failure.printStackTrace();
                                         context.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                                 .json(
@@ -179,7 +165,6 @@ public final class App {
     private static void createBooking(Repository repository, Context context) throws SQLException {
         var payload = Validator.createBooking(context.bodyAsClass(Map.class));
 
-        // Неизвестный рейс — ошибка запроса, а не отсутствующий ресурс: по контракту 400.
         if (!repository.flightExists(payload.flightId())) {
             throw new ApiException(
                     HttpStatus.BAD_REQUEST,
@@ -196,9 +181,6 @@ public final class App {
     }
 
     private static void cancelBooking(Repository repository, Context context) throws SQLException {
-        // Фамилия приходит в теле, а не в query: у отмены есть тело запроса, и второй фактор
-        // доступа
-        // к чужой брони незачем светить в адресе, логах и истории браузера.
         var body =
                 context.body().isBlank()
                         ? Map.<String, Object>of()
@@ -219,10 +201,6 @@ public final class App {
         context.json(cancelled);
     }
 
-    /**
-     * Просмотр и отмена используют одну пару факторов: код и фамилию. Отсутствующая фамилия даёт
-     * тот же 404, что и неверная: иначе перебором узнаются живые коды.
-     */
     private static Map<String, Object> lookup(Repository repository, String code, String lastName)
             throws SQLException {
         if (lastName == null || lastName.trim().isEmpty()) {
@@ -237,10 +215,6 @@ public final class App {
                                         HttpStatus.NOT_FOUND, "not_found", "Бронь не найдена"));
     }
 
-    /**
-     * Javalin отдаёт значения query-параметров списками (у параметра может быть несколько
-     * значений). Валидатору нужен плоский вид, поэтому берём первое значение каждого.
-     */
     private static Map<String, String> singleValueQuery(Context context) {
         var flat = new LinkedHashMap<String, String>();
         for (var entry : context.queryParamMap().entrySet()) {

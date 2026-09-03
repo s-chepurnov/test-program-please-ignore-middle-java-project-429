@@ -10,12 +10,6 @@ import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
 
-/**
- * Доступ к данным: голый SQL через JDBC, без ORM.
- *
- * <p>Время отдаём строкой в формате контракта прямо из базы — to_char в UTC. Так формат не зависит
- * ни от типов драйвера, ни от настроек Jackson.
- */
 public final class Repository {
 
     private static final String CODE_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -72,7 +66,6 @@ public final class Repository {
         this.dataSource = dataSource;
     }
 
-    /** Код брони: ровно 6 символов A–Z и 0–9. SecureRandom, а не Random: код виден пользователю. */
     public static String generateCode() {
         var code = new StringBuilder(CODE_LENGTH);
         for (var i = 0; i < CODE_LENGTH; i++) {
@@ -150,10 +143,6 @@ public final class Repository {
         }
     }
 
-    /**
-     * Создаёт бронь с пассажирами и возвращает её код. Бронь и пассажиры пишутся одной транзакцией:
-     * если вставка пассажиров упала, брони остаться не должно.
-     */
     public String createBooking(
             String flightId, Validator.Contact contact, List<Validator.Passenger> passengers)
             throws SQLException {
@@ -191,11 +180,6 @@ public final class Repository {
         }
     }
 
-    /**
-     * Бронь найдена, если совпал код и фамилия совпала с фамилией любого пассажира. Сравнение — без
-     * учёта регистра и внешних пробелов, средствами базы: {@code toLowerCase} в java с кириллицей
-     * работает, но тогда сравнение уехало бы из индекса {@code lower(last_name)}.
-     */
     public Optional<Map<String, Object>> findBooking(String code, String lastName)
             throws SQLException {
         try (var connection = dataSource.getConnection();
@@ -257,10 +241,6 @@ public final class Repository {
         return passengers;
     }
 
-    /**
-     * Уникальность кода держит первичный ключ, а не проверка перед вставкой: два одновременных
-     * запроса прошли бы проверку одновременно. При коллизии пробуем следующий код.
-     */
     private String insertBooking(
             Connection connection,
             String flightId,

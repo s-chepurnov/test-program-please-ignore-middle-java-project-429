@@ -13,24 +13,11 @@ import java.util.HexFormat;
 import java.util.List;
 import javax.sql.DataSource;
 
-/**
- * Заливка справочных данных.
- *
- * <p>Два свойства, которые обязаны сохраняться (см. {@code __data__/steps/25-db.md}):
- *
- * <ul>
- *   <li>данные привязаны к ТЕКУЩЕЙ дате: окно рейсов — 30 дней от сегодня. Фиксированные даты
- *       перестают работать на следующий месяц;
- *   <li>заливка повторяемая: id рейса вычисляется из маршрута и времени вылета, вставка идёт {@code
- *       ON CONFLICT DO NOTHING}, поэтому повторный запуск не задваивает рейсы.
- * </ul>
- */
 public final class Seeder {
 
     public static final int HORIZON_DAYS = 30;
     private static final int BATCH_SIZE = 250;
 
-    /** Порядок важен: фронтенд берёт из справочника первый и второй город. */
     private static final List<String[]> CITIES =
             List.of(
                     new String[] {"MOW", "Москва", "Россия"},
@@ -66,7 +53,6 @@ public final class Seeder {
             int priceAmount,
             int seatsAvailable) {}
 
-    /** Заливает справочники и рейсы, возвращает число новых рейсов. */
     public int seed() throws SQLException {
         return seed(LocalDate.now(ZoneOffset.UTC));
     }

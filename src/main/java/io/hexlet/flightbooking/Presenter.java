@@ -6,23 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Сборка ответов по контракту из строк базы.
- *
- * <p>Здесь живут три решения, которые в java легко нарушить незаметно.
- *
- * <ol>
- *   <li><b>Цена — {@code integer} в базе, а не {@code numeric}.</b> Драйвер отдаёт numeric как
- *       {@code BigDecimal}, и Jackson пишет его с масштабом: {@code 5400.00} вместо {@code 5400}.
- *   <li><b>Время приходит из базы строкой</b> (to_char в репозитории). Отдай {@code Instant} — и
- *       Jackson без {@code JavaTimeModule} запишет его числом epoch-секунд, а {@code LocalDate} —
- *       массивом {@code [1990,5,20]}. Оба формата контракт нарушают молча.
- *   <li><b>Ответы собираются в {@code Map}, а не в записи с полями.</b> Имена полей контракта —
- *       camelCase, и Map позволяет не заводить DTO под каждый ответ и не настраивать стратегию
- *       именования. {@code LinkedHashMap} — чтобы порядок ключей в JSON был предсказуемым при
- *       отладке.
- * </ol>
- */
 public final class Presenter {
 
     private Presenter() {}

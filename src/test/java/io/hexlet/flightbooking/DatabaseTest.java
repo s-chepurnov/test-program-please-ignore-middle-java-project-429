@@ -5,11 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.Test;
 
-/**
- * Разбор {@code DATABASE_URL} — единственный кусок решения, который живёт вне HTTP, и единственный,
- * где ошибка видна не как «контракт нарушен», а как «приложение не стартует». Поэтому у него свои
- * тесты: если API-тесты падают все сразу, эти отделяют «не разобрали адрес» от «сломали контракт».
- */
 class DatabaseTest {
 
     @Test

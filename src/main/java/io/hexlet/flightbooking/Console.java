@@ -2,11 +2,6 @@ package io.hexlet.flightbooking;
 
 import java.sql.SQLException;
 
-/**
- * Команды обслуживания базы: {@code migrate} и {@code seed}. Их зовёт Makefile перед запуском
- * сервера, поэтому у них отдельная точка входа: контракт запуска требует, чтобы миграции
- * применялись командой, а не как побочный эффект старта приложения.
- */
 public final class Console {
 
     private Console() {}

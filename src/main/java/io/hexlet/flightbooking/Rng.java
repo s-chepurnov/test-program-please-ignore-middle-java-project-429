@@ -1,10 +1,5 @@
 package io.hexlet.flightbooking;
 
-/**
- * Детерминированный генератор (линейный конгруэнтный). Нужен, чтобы набор рейсов был одинаковым
- * между запусками: со {@code Random} отладка превращается в угадывание, а проверка становится
- * флаки.
- */
 public final class Rng {
 
     private static final long MODULO = 0xFFFFFFFFL;

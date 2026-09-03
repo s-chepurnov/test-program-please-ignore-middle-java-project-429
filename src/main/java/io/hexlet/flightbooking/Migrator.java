@@ -9,14 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import javax.sql.DataSource;
 
-/**
- * Миграции: SQL-файлы из ресурсов применяются по одному разу, порядок — по имени файла.
- *
- * <p>Миграционного инструмента студент в программе не проходил: Flyway в курсах кита нет вовсе,
- * Liquibase упомянут одной фразой. Поэтому здесь ровно тот JDBC, который даёт курс: {@code
- * Statement}, {@code execute} и try-with-resources. Flyway и Liquibase остаются законной
- * альтернативой для решения студента.
- */
 public final class Migrator {
 
     private static final String MIGRATIONS_LIST = "db/migrations.txt";
@@ -27,7 +19,6 @@ public final class Migrator {
         this.dataSource = dataSource;
     }
 
-    /** Применяет неприменённые миграции и возвращает их имена. */
     public List<String> migrate() throws SQLException {
         try (var connection = Database.connectWithRetries(dataSource);
                 var statement = connection.createStatement()) {
@@ -83,10 +74,6 @@ public final class Migrator {
         }
     }
 
-    /**
-     * Имена миграций читаются из списка в ресурсах, а не обходом каталога: внутри shadow-jar
-     * каталога нет, есть только записи архива, и обход файловой системы там не работает.
-     */
     private List<String> migrationNames() {
         return readResource(MIGRATIONS_LIST)
                 .lines()
