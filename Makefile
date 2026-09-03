@@ -3,7 +3,7 @@ JAR = build/libs/app.jar
 CONSOLE = io.hexlet.flightbooking.Console
 PORT ?= 8080
 
-.PHONY: install build start db-migrate db-seed test-api lint lint-fix
+.PHONY: install build start db-migrate db-seed test-api lint lint-fix contract
 
 install:
 	./gradlew --console=plain -q classes
@@ -32,3 +32,6 @@ lint:
 
 lint-fix:
 	./gradlew --console=plain -q spotlessApply
+
+contract:
+	npx tsp compile contract

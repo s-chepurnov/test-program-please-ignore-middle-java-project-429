@@ -1,2 +1,4 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/s-chepurnov/test-program-please-ignore-middle-java-project-429/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/s-chepurnov/test-program-please-ignore-middle-java-project-429/actions)
+
+export postgresql://postgres:postgres@localhost:5432/flight-booking
