@@ -29,9 +29,9 @@ test-api:
 
 test:
 	rm -rf tmp/artifacts
-    mkdir -p tmp/artifacts/contract
-    cp contract/openapi.yaml tmp/artifacts/contract/openapi.yaml
-   	npm test
+	mkdir -p tmp/artifacts/contract
+	cp contract/openapi.yaml tmp/artifacts/contract/openapi.yaml
+	npm test
 
 lint:
 	./gradlew --console=plain -q spotlessCheck
