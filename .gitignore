@@ -12,6 +12,7 @@ npm-cache
 .gradle/
 build/
 .idea
+.env
 
 public/assets/
 public/index.html
