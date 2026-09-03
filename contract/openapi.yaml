@@ -1,0 +1,555 @@
+openapi: 3.0.0
+info:
+  title: Flight Booking API
+  version: 1.0.0
+tags:
+  - name: Reference
+  - name: Flights
+  - name: Bookings
+paths:
+  /api/bookings:
+    post:
+      operationId: Bookings_create
+      description: Создать бронь. Пустой passengers[] или нет обязательных полей — 400. Ответ 201 с code.
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '400':
+          description: Некорректные параметры запроса или тело (400).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+      tags:
+        - Bookings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookingRequest'
+  /api/bookings/{code}:
+    get:
+      operationId: Bookings_getByCode
+      description: Просмотр брони по коду + фамилии.
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: lastName
+          in: query
+          required: false
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '404':
+          description: Ресурс не найден (404). Также — при отсутствующем или неверном lastName к коду брони.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+      tags:
+        - Bookings
+  /api/bookings/{code}/cancel:
+    post:
+      operationId: Bookings_cancel
+      description: Отмена брони по code + lastName. Возвращает бронь со status=cancelled. Неверные данные → 404.
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '404':
+          description: Ресурс не найден (404). Также — при отсутствующем или неверном lastName к коду брони.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+      tags:
+        - Bookings
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LastNameBody'
+  /api/cities:
+    get:
+      operationId: Cities_list
+      description: Справочник городов для автодополнения в форме поиска.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/City'
+              examples:
+                Список городов:
+                  summary: Список городов
+                  value:
+                    - code: MOW
+                      name: Москва
+                      country: Россия
+                    - code: LED
+                      name: Санкт-Петербург
+                      country: Россия
+                    - code: AER
+                      name: Сочи
+                      country: Россия
+                    - code: KZN
+                      name: Казань
+                      country: Россия
+                    - code: SVX
+                      name: Екатеринбург
+                      country: Россия
+      tags:
+        - Reference
+  /api/flights:
+    get:
+      operationId: Flights_search
+      description: Поиск рейсов. Пустой результат — 200 с []. Некорректные параметры — 400.
+      parameters:
+        - name: origin
+          in: query
+          required: true
+          schema:
+            type: string
+          explode: false
+        - name: destination
+          in: query
+          required: true
+          schema:
+            type: string
+          explode: false
+        - name: date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          explode: false
+        - name: passengers
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 1
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Flight'
+              examples:
+                Поиск Москва → Санкт-Петербург:
+                  summary: Поиск Москва → Санкт-Петербург
+                  value:
+                    - id: fl_1
+                      flightNumber: SU1234
+                      airline:
+                        code: SU
+                        name: Аэрофлот
+                      origin:
+                        code: MOW
+                        name: Москва
+                        country: Россия
+                      destination:
+                        code: LED
+                        name: Санкт-Петербург
+                        country: Россия
+                      departureAt: '2026-07-01T08:00:00Z'
+                      arrivalAt: '2026-07-01T09:25:00Z'
+                      durationMinutes: 85
+                      price:
+                        amount: 5400
+                        currency: RUB
+                      seatsAvailable: 42
+                    - id: fl_2
+                      flightNumber: DP202
+                      airline:
+                        code: DP
+                        name: Победа
+                      origin:
+                        code: MOW
+                        name: Москва
+                        country: Россия
+                      destination:
+                        code: LED
+                        name: Санкт-Петербург
+                        country: Россия
+                      departureAt: '2026-07-01T13:30:00Z'
+                      arrivalAt: '2026-07-01T15:00:00Z'
+                      durationMinutes: 90
+                      price:
+                        amount: 3200
+                        currency: RUB
+                      seatsAvailable: 18
+                    - id: fl_3
+                      flightNumber: S7311
+                      airline:
+                        code: S7
+                        name: S7 Airlines
+                      origin:
+                        code: MOW
+                        name: Москва
+                        country: Россия
+                      destination:
+                        code: LED
+                        name: Санкт-Петербург
+                        country: Россия
+                      departureAt: '2026-07-01T19:45:00Z'
+                      arrivalAt: '2026-07-01T21:15:00Z'
+                      durationMinutes: 90
+                      price:
+                        amount: 4700
+                        currency: RUB
+                      seatsAvailable: 7
+        '400':
+          description: Некорректные параметры запроса или тело (400).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+      tags:
+        - Flights
+  /api/flights/{id}:
+    get:
+      operationId: Flights_getById
+      description: Получить рейс по id (рефреш/диплинк на странице оформления).
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Flight'
+        '404':
+          description: Ресурс не найден (404). Также — при отсутствующем или неверном lastName к коду брони.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+      tags:
+        - Flights
+components:
+  schemas:
+    Airline:
+      type: object
+      required:
+        - code
+        - name
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+      description: Авиакомпания.
+      example:
+        code: SU
+        name: Аэрофлот
+    BadRequestError:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          default: validation_error
+        message:
+          type: string
+      description: Некорректные параметры запроса или тело (400).
+      example:
+        statusCode: 400
+        code: validation_error
+        message: Укажите параметр date
+    Booking:
+      type: object
+      required:
+        - code
+        - status
+        - flight
+        - passengers
+        - contact
+        - totalPrice
+        - createdAt
+      properties:
+        code:
+          type: string
+          description: Уникальный код брони (PNR-подобный, ~6 символов).
+        status:
+          $ref: '#/components/schemas/BookingStatus'
+        flight:
+          $ref: '#/components/schemas/Flight'
+        passengers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Passenger'
+        contact:
+          $ref: '#/components/schemas/Contact'
+        totalPrice:
+          allOf:
+            - $ref: '#/components/schemas/Money'
+          description: 'Итоговая стоимость: цена рейса × число пассажиров.'
+        createdAt:
+          type: string
+          format: date-time
+      description: Бронь. Возвращается при создании и просмотре.
+      example:
+        code: AB1234
+        status: confirmed
+        flight:
+          id: fl_1
+          flightNumber: SU1234
+          airline:
+            code: SU
+            name: Аэрофлот
+          origin:
+            code: MOW
+            name: Москва
+            country: Россия
+          destination:
+            code: LED
+            name: Санкт-Петербург
+            country: Россия
+          departureAt: '2026-07-01T08:00:00Z'
+          arrivalAt: '2026-07-01T09:25:00Z'
+          durationMinutes: 85
+          price:
+            amount: 5400
+            currency: RUB
+          seatsAvailable: 42
+        passengers:
+          - firstName: Иван
+            lastName: Петров
+            dateOfBirth: '1990-05-20'
+            documentNumber: 4509 123456
+        contact:
+          email: ivan@example.com
+          phone: '+79991234567'
+        totalPrice:
+          amount: 5400
+          currency: RUB
+        createdAt: '2026-06-25T12:00:00Z'
+    BookingStatus:
+      type: string
+      enum:
+        - confirmed
+        - cancelled
+      description: Статус брони.
+    City:
+      type: object
+      required:
+        - code
+        - name
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+        country:
+          type: string
+      description: Город (аэропорт) для формы поиска. code — IATA-подобный код, напр. MOW/LED.
+      example:
+        code: MOW
+        name: Москва
+        country: Россия
+    Contact:
+      type: object
+      required:
+        - email
+        - phone
+      properties:
+        email:
+          type: string
+        phone:
+          type: string
+      description: Контактные данные заказчика брони.
+      example:
+        email: ivan@example.com
+        phone: '+79991234567'
+    CreateBookingRequest:
+      type: object
+      required:
+        - flightId
+        - contact
+        - passengers
+      properties:
+        flightId:
+          type: string
+        contact:
+          $ref: '#/components/schemas/Contact'
+        passengers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Passenger'
+          minItems: 1
+          description: Список пассажиров — минимум один.
+      description: Тело запроса на создание брони.
+    Flight:
+      type: object
+      required:
+        - id
+        - flightNumber
+        - airline
+        - origin
+        - destination
+        - departureAt
+        - arrivalAt
+        - durationMinutes
+        - price
+        - seatsAvailable
+      properties:
+        id:
+          type: string
+        flightNumber:
+          type: string
+        airline:
+          $ref: '#/components/schemas/Airline'
+        origin:
+          $ref: '#/components/schemas/City'
+        destination:
+          $ref: '#/components/schemas/City'
+        departureAt:
+          type: string
+          format: date-time
+        arrivalAt:
+          type: string
+          format: date-time
+        durationMinutes:
+          type: integer
+          format: int32
+        price:
+          allOf:
+            - $ref: '#/components/schemas/Money'
+          description: Цена за одного пассажира.
+        seatsAvailable:
+          type: integer
+          format: int32
+      description: Рейс — результат поиска и предмет бронирования.
+      example:
+        id: fl_1
+        flightNumber: SU1234
+        airline:
+          code: SU
+          name: Аэрофлот
+        origin:
+          code: MOW
+          name: Москва
+          country: Россия
+        destination:
+          code: LED
+          name: Санкт-Петербург
+          country: Россия
+        departureAt: '2026-07-01T08:00:00Z'
+        arrivalAt: '2026-07-01T09:25:00Z'
+        durationMinutes: 85
+        price:
+          amount: 5400
+          currency: RUB
+        seatsAvailable: 42
+    LastNameBody:
+      type: object
+      properties:
+        lastName:
+          type: string
+          description: Фамилия любого пассажира брони. Отсутствующая или неверная даёт 404, а не 400.
+      description: 'Тело запроса на отмену брони: второй фактор доступа.'
+      example:
+        lastName: Петров
+    Money:
+      type: object
+      required:
+        - amount
+        - currency
+      properties:
+        amount:
+          type: integer
+          format: int32
+        currency:
+          type: string
+          default: RUB
+      description: Денежная сумма. amount — целые рубли (без копеек).
+      example:
+        amount: 5400
+        currency: RUB
+    NotFoundError:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          default: not_found
+        message:
+          type: string
+      description: Ресурс не найден (404). Также — при отсутствующем или неверном lastName к коду брони.
+      example:
+        statusCode: 404
+        code: not_found
+        message: Бронь с таким кодом не найдена
+    Passenger:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - dateOfBirth
+        - documentNumber
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        documentNumber:
+          type: string
+      description: Пассажир.
+      example:
+        firstName: Иван
+        lastName: Петров
+        dateOfBirth: '1990-05-20'
+        documentNumber: 4509 123456
+servers:
+  - url: http://localhost:8080
+    description: 'Локальный запуск: фронтенд и API на одном порту'
+    variables: {}
