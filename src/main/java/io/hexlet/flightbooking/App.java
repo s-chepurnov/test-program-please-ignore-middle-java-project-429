@@ -12,10 +12,6 @@ import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 
-/**
- * Приложение: маршруты API плюс раздача фронтенда с SPA-fallback.
- *
-**/
 public final class App {
 
     private static final int DEFAULT_PORT = 8080;
@@ -58,8 +54,8 @@ public final class App {
                                         var params =
                                                 Validator.searchQuery(singleValueQuery(context));
 
-                                        // Пустой результат — не ошибка: 200 и []. В том числе когда
-                                        // города совпали.
+                                        // Пустой результат — не ошибка: 200 и [].
+                                        // В том числе когда города совпали.
                                         context.json(
                                                 repository.searchFlights(
                                                         params.origin(),
@@ -126,9 +122,8 @@ public final class App {
                                         }
                                     });
 
-                            // Формат ошибки задаём сами: у Javalin по умолчанию тело пустое или
-                            // текстовое, а контракт
-                            // требует {code, message}.
+                            // Формат ошибки задаём сами:
+                            // у Javalin по умолчанию тело пустое или текстовое, а контракт требует {code, message}.
                             config.routes.exception(
                                     Validator.ValidationException.class,
                                     (failure, context) ->
@@ -172,9 +167,7 @@ public final class App {
                     "Неизвестный flightId: " + payload.flightId());
         }
 
-        var code =
-                repository.createBooking(
-                        payload.flightId(), payload.contact(), payload.passengers());
+        var code = repository.createBooking(payload.flightId(), payload.contact(), payload.passengers());
         var booking = repository.findBooking(code, payload.passengers().get(0).lastName());
 
         context.status(HttpStatus.CREATED).json(booking.orElseThrow());
