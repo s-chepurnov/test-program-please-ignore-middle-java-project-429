@@ -11,7 +11,7 @@ public class HealthController {
 
     @GetMapping
     public HealthDto check() {
-        // Spring Boot сам вернет статус 200 OK и превратит объект в {"status": "ok"}
+
         return new HealthDto("ok");
     }
 }

@@ -8,7 +8,7 @@ install:
 
 build:
 	rm -rf src/main/resources/public/assets src/main/resources/public/index.html
-	mkdir -p src/main/resources/static
+	mkdir -p src/main/resources/public
 	rsync -av $(FRONTEND_DIST)/ src/main/resources/public/
 	./gradlew bootJar
 
@@ -17,3 +17,6 @@ start:
 
 contract:
 	npx tsp compile contract
+
+test:
+	./gradlew test

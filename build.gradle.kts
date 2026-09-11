@@ -25,10 +25,11 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.openapitools:jackson-databind-nullable:0.2.6")
-    implementation("io.swagger.core.v3:swagger-annotations:2.2.19")
+    implementation("org.openapitools:jackson-databind-nullable:0.2.10")
+    implementation("io.swagger.core.v3:swagger-annotations-jakarta:2.2.55")
 
-	testImplementation("org.springframework.boot:spring-boot-starter-jdbc-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-jdbc-test")
 	testCompileOnly("org.projectlombok:lombok")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	testAnnotationProcessor("org.projectlombok:lombok")

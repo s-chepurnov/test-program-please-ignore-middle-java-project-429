@@ -9,9 +9,4 @@ spring:
     resources:
       static-locations: "classpath:/public/"
   jackson:
-    serialization:
-      write-dates-as-timestamps: false
     time-zone: UTC
-
-server:
-  port: ${PORT:8080}
