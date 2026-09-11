@@ -24,6 +24,10 @@ dependencies {
 	runtimeOnly("org.postgresql:postgresql")
 	annotationProcessor("org.projectlombok:lombok")
 
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.openapitools:jackson-databind-nullable:0.2.6")
+    implementation("io.swagger.core.v3:swagger-annotations:2.2.19")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-jdbc-test")
 	testCompileOnly("org.projectlombok:lombok")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")

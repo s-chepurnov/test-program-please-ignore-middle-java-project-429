@@ -1,16 +1,19 @@
 FRONTEND_DIST=node_modules/@hexlet/java-flight-booking-frontend/dist
 
-.PHONY: build
+.PHONY: build contract
 
-make install:
+install:
 	npm ci
 	./gradlew compileJava
 
-make build:
+build:
 	rm -rf src/main/resources/public/assets src/main/resources/public/index.html
 	mkdir -p src/main/resources/static
 	rsync -av $(FRONTEND_DIST)/ src/main/resources/public/
 	./gradlew bootJar
 
-make start:
+start:
 	./gradlew bootRun
+
+contract:
+	npx tsp compile contract

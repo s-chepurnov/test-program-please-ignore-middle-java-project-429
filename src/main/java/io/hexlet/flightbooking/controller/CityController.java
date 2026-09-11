@@ -1,5 +1,6 @@
 package io.hexlet.flightbooking.controller;
 
+import io.hexlet.flightbooking.dto.CityDto;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,10 +13,8 @@ import java.util.List;
 public class CityController {
 
     @GetMapping
-    public List<String> getCities() {
+    public List<CityDto> list() {
 
-        List<String> cities = new ArrayList();
-        return cities;
+        return new ArrayList<>();
     }
-
 }
