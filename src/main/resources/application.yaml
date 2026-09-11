@@ -5,5 +5,9 @@ spring:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/flight-booking}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
+  web:
+    resources:
+      static-locations: "classpath:/public/"
+
 server:
   port: ${PORT:8080}
