@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "io.hexlet"
-version = "0.0.1-SNAPSHOT"
+version = ""
 
 java {
 	toolchain {
@@ -27,6 +27,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.openapitools:jackson-databind-nullable:0.2.10")
     implementation("io.swagger.core.v3:swagger-annotations-jakarta:2.2.55")
+
+    implementation("org.springframework.boot:spring-boot-starter-flyway")
+    implementation("org.flywaydb:flyway-database-postgresql")
 
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testImplementation("org.springframework.boot:spring-boot-starter-jdbc-test")

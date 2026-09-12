@@ -15,6 +15,7 @@ public class CityController {
     @GetMapping
     public List<CityDto> list() {
 
+
         return new ArrayList<>();
     }
 }
