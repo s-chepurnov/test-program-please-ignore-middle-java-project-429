@@ -21,8 +21,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-jdbc")
 	compileOnly("org.projectlombok:lombok")
-	runtimeOnly("org.postgresql:postgresql")
+	runtimeOnly("org.postgresql:postgresql:42.7.5")
 	annotationProcessor("org.projectlombok:lombok")
+    implementation("org.springframework.boot:spring-boot-starter-logging")
 
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.openapitools:jackson-databind-nullable:0.2.10")

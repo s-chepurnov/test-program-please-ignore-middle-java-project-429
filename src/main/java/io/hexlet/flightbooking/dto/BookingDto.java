@@ -1,6 +1,7 @@
 package io.hexlet.flightbooking.dto;
 
-import java.time.Instant;
+import io.hexlet.flightbooking.model.BookingStatus;
+
 import java.util.List;
 
 public record BookingDto(
@@ -10,5 +11,5 @@ public record BookingDto(
         List<PassengerDto> passengers,
         ContactDto contact,
         MoneyDto totalPrice,
-        Instant createdAt
+        String createdAt
 ) {}
