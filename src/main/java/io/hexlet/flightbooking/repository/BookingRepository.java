@@ -46,10 +46,6 @@ public class BookingRepository {
                 .stream().findFirst();
     }
 
-    /**
-     * Ищет бронь по коду только если среди её пассажиров есть тот,
-     * чья фамилия совпадает. Отсутствующая или неверная фамилия → empty.
-     */
     public Optional<Booking> findByCodeAndLastName(String code, String lastName) {
         if (lastName == null || lastName.isBlank()) {
             return Optional.empty();

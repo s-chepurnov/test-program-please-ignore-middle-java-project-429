@@ -26,7 +26,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-logging")
 
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.openapitools:jackson-databind-nullable:0.2.10")
     implementation("io.swagger.core.v3:swagger-annotations-jakarta:2.2.55")
 
     implementation("org.springframework.boot:spring-boot-starter-flyway")

@@ -2,9 +2,7 @@ spring:
   application:
     name: flightbooking
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/flight-booking}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
+    url: ${DATABASE_URL:postgres://postgres:postgres@localhost:5432/flight-booking}
   web:
     resources:
       static-locations: "classpath:/public/"

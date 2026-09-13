@@ -64,7 +64,6 @@ public class FlightRepository {
                 .stream().findFirst();
     }
 
-    /** Атомарно списывает места. Возвращает 0, если мест не хватило. */
     public int decrementSeats(String flightId, int count) {
         return jdbc.update("""
             UPDATE flights
@@ -74,7 +73,6 @@ public class FlightRepository {
             """, count, flightId, count);
     }
 
-    /** Возвращает места при отмене брони. */
     public int incrementSeats(String flightId, int count) {
         return jdbc.update(
                 "UPDATE flights SET seats_available = seats_available + ? WHERE id = ?",

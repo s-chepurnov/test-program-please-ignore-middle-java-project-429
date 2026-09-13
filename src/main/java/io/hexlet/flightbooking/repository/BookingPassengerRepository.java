@@ -55,7 +55,6 @@ public class BookingPassengerRepository {
                 });
     }
 
-    /** Существует ли в брони пассажир с такой фамилией (регистронезависимо). */
     public boolean existsByBookingCodeAndLastName(String bookingCode, String lastName) {
         if (lastName == null || lastName.isBlank()) {
             return false;
