@@ -9,6 +9,7 @@ install:
 
 build:
 	rm -rf src/main/resources/public/assets src/main/resources/public/index.html
+	mkdir -p public
 	rsync -av $(FRONTEND_DIST)/ src/main/resources/public/
 	./gradlew bootJar
 

@@ -4,7 +4,7 @@
 [![main](https://github.com/s-chepurnov/test-program-please-ignore-middle-java-project-429/actions/workflows/main.yml/badge.svg)](https://github.com/s-chepurnov/test-program-please-ignore-middle-java-project-429/actions/workflows/main.yml)
 
 Cервис бронирования авиабилетов: справочник городов, поиск рейсов,
-оформление, просмотр и отмену брони. 
+оформление, просмотр и отмена брони. 
 
 Ссылка на развернутое приложение:
 
