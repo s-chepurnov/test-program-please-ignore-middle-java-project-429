@@ -14,21 +14,25 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**")
-                .addResourceLocations("classpath:/public/")
+                // classpath — локально: make build кладёт фронт в resources/public,
+                // file — Docker/Render: фронт лежит рядом с jar, в /app/public/.
+                .addResourceLocations("classpath:/public/", "file:./public/")
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver() {
                     @Override
                     protected Resource getResource(String resourcePath, Resource location) throws IOException {
-                        // сервер обязан отдавать index.html на любой адрес,
-                        // который не начинается с /api/ и не указывает на существующий файл.
-                        // Это правило называется SPA-fallback
-                        Resource requestedResource = location.createRelative(resourcePath);
 
-                        if (requestedResource.exists() && requestedResource.isReadable() || resourcePath.startsWith("api/")) {
-                            return requestedResource;
+                        var requested = location.createRelative(resourcePath);
+                        if (requested.exists() && requested.isReadable()) {
+                            return requested;
                         }
 
-                        return location.createRelative("index.html");
+                        if (resourcePath.startsWith("api/")) {
+                            return null;
+                        }
+
+                        var index = location.createRelative("index.html");
+                        return index.exists() ? index : null;
                     }
                 });
     }
