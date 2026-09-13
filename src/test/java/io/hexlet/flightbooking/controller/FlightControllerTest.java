@@ -17,10 +17,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Sql(
+        scripts = "/cleandatabase.sql",
+        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class FlightControllerTest {
 
     @Autowired
@@ -29,8 +33,6 @@ class FlightControllerTest {
     private static String date(int plusDays) {
         return LocalDate.now(ZoneOffset.UTC).plusDays(plusDays).toString();
     }
-
-    // ---------- поиск ----------
 
     @Test
     void searchReturnsFlights() throws Exception {
@@ -78,8 +80,6 @@ class FlightControllerTest {
                 .andExpect(jsonPath("$.length()").value(0));
     }
 
-    // ---------- отсутствующий параметр date ----------
-
     @Test
     void searchWithoutDateReturns400() throws Exception {
         mockMvc.perform(get("/api/flights")
@@ -89,8 +89,6 @@ class FlightControllerTest {
                 .andExpect(jsonPath("$.code").value("validation_error"))
                 .andExpect(jsonPath("$.message").isString());
     }
-
-    // ---------- получение по id ----------
 
     @Test
     void getByIdReturnsFlight() throws Exception {
@@ -129,7 +127,6 @@ class FlightControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        // Сравниваем наборы ключей верхнего уровня
         var searchKeys = JsonPath.<java.util.Map<String, Object>>read(searchBody, "$[0]").keySet();
         var byIdKeys = JsonPath.<java.util.Map<String, Object>>read(byIdBody, "$").keySet();
 

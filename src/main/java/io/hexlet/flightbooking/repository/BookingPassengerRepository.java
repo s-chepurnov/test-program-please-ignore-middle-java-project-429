@@ -41,7 +41,7 @@ public class BookingPassengerRepository {
             INSERT INTO booking_passengers
                 (booking_code, position, first_name, last_name,
                  date_of_birth, document_number)
-            VALUES (?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?::date, ?)
             """,
                 passengers,
                 passengers.size(),
@@ -50,7 +50,7 @@ public class BookingPassengerRepository {
                     ps.setInt(2, p.position());
                     ps.setString(3, p.firstName());
                     ps.setString(4, p.lastName());
-                    ps.setString(5, p.dateOfBirth());
+                    ps.setString(5, p.dateOfBirth());     // "1987-12-01"
                     ps.setString(6, p.documentNumber());
                 });
     }

@@ -22,4 +22,7 @@ test:
 	./gradlew test
 
 clean:
+	rm -rf ~/.gradle/caches/modules-2/files-2.1/ch.qos.logback
 	./gradlew clean
+
+all: clean install build start

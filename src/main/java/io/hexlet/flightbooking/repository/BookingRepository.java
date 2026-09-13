@@ -52,14 +52,21 @@ public class BookingRepository {
         }
 
         return jdbc.query(SELECT_BOOKING + """
-            WHERE code = ?
-              AND EXISTS (
-                  SELECT 1 FROM booking_passengers p
-                   WHERE p.booking_code = bookings.code
-                     AND lower(p.last_name) = lower(?)
-              )
-            """, ROW_MAPPER, code, lastName)
+        WHERE code = ?
+          AND EXISTS (
+              SELECT 1 FROM booking_passengers p
+               WHERE p.booking_code = bookings.code
+                 AND lower(p.last_name) = lower(?)
+          )
+        """, ROW_MAPPER, code, lastName)
                 .stream().findFirst();
+    }
+
+    public boolean existsByCode(String code) {
+        var count = jdbc.queryForObject(
+                "SELECT count(*) FROM bookings WHERE code = ?",
+                Integer.class, code);
+        return count != null && count > 0;
     }
 
     public void insert(Booking booking) {
@@ -82,12 +89,5 @@ public class BookingRepository {
         return jdbc.update(
                 "UPDATE bookings SET status = ? WHERE code = ?",
                 status.toDb(), code);
-    }
-
-    public boolean existsByCode(String code) {
-        var count = jdbc.queryForObject(
-                "SELECT count(*) FROM bookings WHERE code = ?",
-                Integer.class, code);
-        return count != null && count > 0;
     }
 }
