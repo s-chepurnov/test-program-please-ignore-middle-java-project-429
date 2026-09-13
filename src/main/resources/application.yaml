@@ -5,7 +5,9 @@ spring:
     url: ${DATABASE_URL:postgres://postgres:postgres@localhost:5432/flight-booking}
   web:
     resources:
-      static-locations: "classpath:/public/"
+      static-locations:
+        - classpath:/public/
+        - file:./public/
   jackson:
     time-zone: UTC
   flyway:

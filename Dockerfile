@@ -14,7 +14,7 @@ COPY gradle ./gradle
 COPY settings.gradle.kts build.gradle.kts ./
 RUN ./gradlew --no-daemon --console=plain -q dependencies > /dev/null 2>&1 || true
 COPY src ./src
-RUN ./gradlew --no-daemon --console=plain -q shadowJar
+RUN ./gradlew --no-daemon --console=plain -q bootJar
 
 # 3) Рантайм: только JRE, без JDK и без Gradle
 FROM eclipse-temurin:25-jre
